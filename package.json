@@ -1,0 +1,22 @@
+{
+  "name": "node-bot-notification-api",
+  "version": "1.0.0",
+  "description": "api to send direct msgs to users or in the telegram group",
+  "main": "index.js",
+  "author": {
+    "name": "Marcus Borges",
+    "url": "https://github.com/marcus2vinicius"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "log4js": "^6.3.0",
+    "node-telegram-bot-api": "^0.54.0",
+    "validate-phone-number-node-js": "0.0.1"
+  }
+}
