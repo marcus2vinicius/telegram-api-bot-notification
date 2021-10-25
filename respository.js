@@ -12,12 +12,17 @@ function isSavedByPhone(phone){
 }
 
 function save(chat_id, username, phoneNumber){
-    const user = {
-        id: chat_id,
-        username: username,
-        phone: phoneNumber
+    let userSaved = findUserByUsername(username)
+    if(userSaved){
+        userSaved.phone = phoneNumber;
+    }else{
+        const user = {
+            id: chat_id,
+            username: username,
+            phone: phoneNumber
+        }
+        users.push(user)
     }
-    users.push(user)
     logger.debug('new user saved', username)
 }
 
