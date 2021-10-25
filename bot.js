@@ -74,8 +74,23 @@ function sendPicToBot(stream, chatId){
 }*/
 
 bot.onText(/\/start/, (msg) => {
-    if(!repository.isSavedByUserName(msg.chat.id, msg.chat.username) && msg.chat.type == 'private'){
+    if(msg.chat.type == 'private'){
         bot.sendMessage(msg.chat.id, process.env.BOT_MSG_START)
+    }
+});
+
+function showProfileToUser(user) {
+   let msg = `${process.env.BOT_MSG_CONFIGURED_NUMBER} ${user.phone}
+   \n${process.env.BOT_MSG_COMMAND_CHANGE_NUMBER}`;
+    bot.sendMessage(user.id,msg)
+}
+
+bot.onText(/\/profile/, (msg) => {
+    if(repository.isSavedByUserName(msg.chat.username) && msg.chat.type == 'private'){
+       let user = repository.findUserByUsername(msg.chat.username);
+       showProfileToUser(user);
+    }else{
+        bot.sendMessage(msg.chat.id, 'you are not configured try send /start')
     }
 });
 
@@ -90,6 +105,7 @@ bot.onText(  /^\d+$/, (msg) => {
         } else {
             logger.debug('number is valid and trying to save')
             repository.save(msg.chat.id, msg.chat.username, msg.text)
+            bot.sendMessage(msg.chat.id, process.env.BOT_MSG_NUMBER_SAVED)
         }
     }
 
