@@ -1,39 +1,50 @@
-const users = [];
 const logger = require('./logger').getLogger('repository.js')
+const database = require('./mongo-connect')
 
-function isSavedByUserName(username){
+async function isSavedByUserName(username) {
     logger.debug('isSavedByUserName()', username)
-    return findUserByUsername(username) ? true : false;
+    return await findUserByUsername(username) ? true : false;
 }
 
-function isSavedByPhone(phone){
+async function isSavedByPhone(phone) {
     logger.debug('isSavedByUserName()', username)
-    return findUserByphone(phone) ? true : false;
+    return await findUserByphone(phone) ? true : false;
 }
 
-function save(chat_id, username, phoneNumber){
-    let userSaved = findUserByUsername(username)
-    if(userSaved){
+async function save(chat_id, username, phoneNumber) {
+    let db = await database.get();
+    const userCollection = db.collection("bot_users");
+    let userSaved = await findUserByUsername(username)
+    if (userSaved) {
         userSaved.phone = phoneNumber;
-    }else{
+        var newvalues = { $set: {phone: phoneNumber} }
+        userCollection.updateOne({username: username}, newvalues)
+        logger.debug('user saved', username)
+    } else {
         const user = {
             id: chat_id,
             username: username,
             phone: phoneNumber
         }
-        users.push(user)
+        userCollection.insertOne(user);
+        logger.debug('new user saved', username)
     }
-    logger.debug('new user saved', username)
 }
 
-function findUserByUsername (username){
+async function findUserByUsername(username) {
     logger.debug('findUserByUsername()', username)
-    return users.find(u=>u.username == username);
+    let db = await database.get();
+    const userCollection = db.collection("bot_users");
+    let user = await userCollection.findOne({username: username})
+    return user;
 }
 
-function findUserByphone (phone){
+async function findUserByphone(phone) {
     logger.debug('findUserByphone()', phone)
-    return users.find(u=>u.phone == phone);
+    let db = await database.get();
+    const userCollection = db.collection("bot_users");
+    let user = await userCollection.findOne({phone: phone})
+    return user;
 }
 
 module.exports = {isSavedByPhone, isSavedByUserName, findUserByUsername, findUserByphone, save}

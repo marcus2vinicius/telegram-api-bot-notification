@@ -35,7 +35,7 @@ function sendMsgToBot(tokenBot, chatId, msg, parse_mode){
  */
 async function sendMsgToUserName(tokenBot, username, msg, parse_mode){
     logger.debug("token:{}, chatId:{}", tokenBot, username)
-    let user = repository.findUserByUsername(username)
+    let user = await repository.findUserByUsername(username)
     if(user)
         return bot.sendMessage(user.id, msg, {parse_mode: parse_mode})
     else{
@@ -54,7 +54,7 @@ async function sendMsgToUserName(tokenBot, username, msg, parse_mode){
  */
 async function sendMsgToPhone(tokenBot, phone, msg, parse_mode){
     logger.debug("token:{}, chatId:{}", tokenBot, phone)
-    let user = repository.findUserByphone(phone)
+    let user = await repository.findUserByphone(phone)
     if(user)
         return bot.sendMessage(user.id, msg, {parse_mode: parse_mode})
     else{
@@ -85,11 +85,11 @@ function showProfileToUser(user) {
     bot.sendMessage(user.id,msg)
 }
 
-bot.onText(/\/profile/, (msg) => {
-    if(repository.isSavedByUserName(msg.chat.username) && msg.chat.type == 'private'){
-       let user = repository.findUserByUsername(msg.chat.username);
-       showProfileToUser(user);
-    }else{
+bot.onText(/\/profile/, async (msg) => {
+    if (await repository.isSavedByUserName(msg.chat.username) && msg.chat.type == 'private') {
+        let user = await repository.findUserByUsername(msg.chat.username);
+        showProfileToUser(user);
+    } else {
         bot.sendMessage(msg.chat.id, 'you are not configured try send /start')
     }
 });
