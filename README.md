@@ -2,7 +2,7 @@
 
 Send msg to channel, group or user by api rest
 
-##depencency
+## depencency
 - nodejs
 ## Installation
 ```bash
@@ -22,6 +22,14 @@ node index.js
 
 - For send message to group/channel is not necessary start conversation with bot, just put your bot in the group -> http://localhost:3001/send
 
+### others
+version with mongodb ->
+```
+{
+  branch: mongo
+  https://github.com/marcus2vinicius/telegram-api-bot-notification/tree/mongo
+}
+```
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
